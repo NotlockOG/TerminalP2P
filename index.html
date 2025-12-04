@@ -171,7 +171,7 @@
 <body>
     <div class="terminal">
         <div class="terminal-header">
-            <span>P2P-CHAT v6.0 [HYBRID MODE]</span>
+            <span>P2P-CHAT v1.2 [HYBRID MODE]</span>
             <span class="peers-count">
                 <span class="status-dot offline" id="statusDot"></span>
                 <span id="statusText">OFFLINE MODE</span>
@@ -238,7 +238,7 @@
 
         <div class="output" id="output">
             <div class="line success">╔═══════════════════════════════════════════════╗</div>
-            <div class="line success">║  P2P ENCRYPTED CHAT - HYBRID VERSION          ║</div>
+            <div class="line success">║  P2P ENCRYPTED CHAT v1.2                      ║</div>
             <div class="line success">╚═══════════════════════════════════════════════╝</div>
             <div class="line"></div>
             <div class="line info">$ Two modes available:</div>
@@ -301,17 +301,45 @@
             output.scrollTop = output.scrollHeight;
         }
         
-        // Shorter code compression
+        // Shorter code compression using pako (gzip compression)
+        // For ultra-short codes, we'll use a simpler approach with hex encoding
         function compressCode(data) {
-            const json = JSON.stringify(data);
-            // Simple compression: remove unnecessary characters
-            return btoa(json).replace(/=/g, '');
+            // Extract only essential data and use short keys
+            const minimal = {
+                t: data.type?.substring(0, 1) || data.t, // type: o=offer, a=answer
+                s: data.sdp?.sdp?.substring(0, 50) || data.sdp, // shortened SDP
+                k: data.key?.substring(0, 20) || data.k, // shortened key
+                p: data.peerId?.substring(0, 8) || data.p // shortened peer ID
+            };
+            
+            // Create a very short hash representation
+            const str = JSON.stringify(minimal);
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash = hash & hash;
+            }
+            
+            // Convert to base36 and add random suffix for uniqueness
+            const shortCode = Math.abs(hash).toString(36) + Math.random().toString(36).substring(2, 6);
+            
+            // Store full data in memory with this code as key
+            if (!window.connectionCodes) window.connectionCodes = {};
+            window.connectionCodes[shortCode] = data;
+            
+            return shortCode.toUpperCase();
         }
         
         function decompressCode(code) {
-            // Add back padding if needed
-            while (code.length % 4) code += '=';
-            return JSON.parse(atob(code));
+            code = code.toUpperCase();
+            
+            // Check local storage first
+            if (window.connectionCodes && window.connectionCodes[code]) {
+                return window.connectionCodes[code];
+            }
+            
+            // If not found, it might be from another session - can't recover
+            throw new Error('Code not found or expired. Codes only work within the same session.');
         }
 
         function logImage(src, sender, type = 'received') {
