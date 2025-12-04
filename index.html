@@ -161,6 +161,76 @@
             display: flex;
             gap: 5px;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal.show {
+            display: flex;
+        }
+        .modal-content {
+            background: #1a1a1a;
+            border: 2px solid #00ff00;
+            border-radius: 4px;
+            padding: 30px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #00ff00;
+        }
+        .modal-content::-webkit-scrollbar { width: 8px; }
+        .modal-content::-webkit-scrollbar-track { background: #0c0c0c; }
+        .modal-content::-webkit-scrollbar-thumb { background: #00ff00; }
+        .modal-content h2 {
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .modal-content h3 {
+            color: #00ff00;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .modal-content p, .modal-content li {
+            color: #00aaff;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .modal-content ul {
+            margin-left: 20px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        .download-link {
+            color: #00ff00;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .download-link:hover {
+            color: #00cc00;
+        }
+        .banner {
+            background: #ffaa00;
+            color: #0c0c0c;
+            padding: 10px 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            border-bottom: 2px solid #ff8800;
+        }
         .mode-tabs {
             display: flex;
             gap: 5px;
@@ -170,12 +240,123 @@
 </head>
 <body>
     <div class="terminal">
+        <div class="banner">
+            ⚠️ OFFICIAL SERVERS CURRENTLY BEING MADE - WILL BE UP BY 2026 ⚠️
+        </div>
         <div class="terminal-header">
-            <span>P2P-CHAT v1.2 [HYBRID MODE]</span>
+            <span>P2P-CHAT v1.3 [HYBRID MODE]</span>
             <span class="peers-count">
                 <span class="status-dot offline" id="statusDot"></span>
                 <span id="statusText">OFFLINE MODE</span>
             </span>
+        </div>
+
+        <!-- ToS Modal -->
+        <div class="modal" id="tosModal">
+            <div class="modal-content">
+                <h2>TERMS OF SERVICE & PRIVACY POLICY</h2>
+                
+                <h3>1. Service Description</h3>
+                <p>P2P-CHAT is a peer-to-peer encrypted chat application. All communications are sent directly between users' devices with end-to-end encryption.</p>
+                
+                <h3>2. Privacy & Monitoring</h3>
+                <p><strong>WE DO NOT AND CANNOT MONITOR YOUR CHATS.</strong> This service uses peer-to-peer technology with end-to-end encryption. All messages are sent directly between users' browsers. We have no servers that store, process, or can view your communications.</p>
+                <ul>
+                    <li>Messages are encrypted on your device</li>
+                    <li>Transmitted directly to recipient's device</li>
+                    <li>Decrypted only on recipient's device</li>
+                    <li>No message history is stored anywhere</li>
+                    <li>Signaling servers (if used) only coordinate connections, never see message content</li>
+                </ul>
+                
+                <h3>3. User Responsibility</h3>
+                <p><strong>WE CANNOT CONTROL WHAT USERS SEND OR RECEIVE.</strong> By using this service, you acknowledge:</p>
+                <ul>
+                    <li>You are solely responsible for content you send</li>
+                    <li>We cannot moderate, filter, or control any communications</li>
+                    <li>We cannot recover or delete messages after they're sent</li>
+                    <li>You must comply with all applicable laws in your jurisdiction</li>
+                    <li>You must be 13 years or older (or age required in your country)</li>
+                </ul>
+                
+                <h3>4. Prohibited Uses</h3>
+                <p>You agree NOT to use this service for:</p>
+                <ul>
+                    <li>Illegal activities or content</li>
+                    <li>Harassment, threats, or abuse</li>
+                    <li>Sharing malware or malicious files</li>
+                    <li>Impersonating others</li>
+                    <li>Spamming or commercial solicitation</li>
+                    <li>Child exploitation material (strictly prohibited and illegal)</li>
+                </ul>
+                
+                <h3>5. Data Collection</h3>
+                <p>We collect MINIMAL data:</p>
+                <ul>
+                    <li>Your chosen username (stored locally in your browser)</li>
+                    <li>Connection metadata if using signaling server (IP addresses, connection times)</li>
+                    <li>NO message content</li>
+                    <li>NO files shared</li>
+                    <li>NO chat history</li>
+                </ul>
+                
+                <h3>6. Security</h3>
+                <p>While we implement strong encryption (AES-256-GCM), no system is 100% secure. You use this service at your own risk. We are not responsible for:</p>
+                <ul>
+                    <li>Compromised devices</li>
+                    <li>User error in sharing codes/passwords</li>
+                    <li>Network security issues</li>
+                    <li>Third-party interception</li>
+                </ul>
+                
+                <h3>7. File Sharing</h3>
+                <p>File sharing is peer-to-peer and direct. We do not scan, filter, or control files. Users are responsible for:</p>
+                <ul>
+                    <li>Scanning files for malware before opening</li>
+                    <li>Ensuring they have rights to share files</li>
+                    <li>Complying with copyright laws</li>
+                    <li>Not sharing illegal content</li>
+                </ul>
+                
+                <h3>8. No Warranty</h3>
+                <p>This service is provided "AS IS" without warranties of any kind. We do not guarantee:</p>
+                <ul>
+                    <li>Uninterrupted service</li>
+                    <li>Error-free operation</li>
+                    <li>Security from all threats</li>
+                    <li>Compatibility with all systems</li>
+                </ul>
+                
+                <h3>9. Liability</h3>
+                <p>We are NOT liable for:</p>
+                <ul>
+                    <li>Content shared by users</li>
+                    <li>Damages from service use</li>
+                    <li>Loss of data</li>
+                    <li>Actions of other users</li>
+                    <li>Legal consequences of your use</li>
+                </ul>
+                
+                <h3>10. Age Requirements</h3>
+                <p>You must be at least 13 years old (or the minimum age in your country) to use this service. Parents/guardians are responsible for monitoring minors' use.</p>
+                
+                <h3>11. Changes to Terms</h3>
+                <p>We reserve the right to modify these terms. Continued use after changes constitutes acceptance.</p>
+                
+                <h3>12. Open Source</h3>
+                <p>This software is provided as-is. You may download and modify it. <span class="download-link" id="downloadHtmlLink">Click here to download this HTML file.</span></p>
+                
+                <h3>13. Contact & Reporting</h3>
+                <p>Due to the decentralized nature, we cannot remove content or ban users. If you receive illegal content, report it to local law enforcement, not us.</p>
+                
+                <h3>14. Acceptance</h3>
+                <p>By clicking "Accept" below, you acknowledge you have read, understood, and agree to these terms.</p>
+                
+                <div class="modal-buttons">
+                    <button id="acceptTosBtn">ACCEPT & CONTINUE</button>
+                    <button class="secondary" id="declineTosBtn">DECLINE</button>
+                </div>
+            </div>
         </div>
 
         <div class="setup-panel" id="setupPanel">
@@ -238,7 +419,7 @@
 
         <div class="output" id="output">
             <div class="line success">╔═══════════════════════════════════════════════╗</div>
-            <div class="line success">║  P2P ENCRYPTED CHAT v1.2                      ║</div>
+            <div class="line success">║  P2P ENCRYPTED CHAT v1.3                      ║</div>
             <div class="line success">╚═══════════════════════════════════════════════╝</div>
             <div class="line"></div>
             <div class="line info">$ Two modes available:</div>
@@ -253,10 +434,15 @@
             <input type="text" id="messageInput" placeholder="Connect first..." disabled>
             <div class="input-controls">
                 <input type="file" id="imageInput" accept="image/*">
+                <input type="file" id="fileInput">
                 <button id="imageBtn" disabled title="Send Image">IMG</button>
+                <button id="fileBtn" disabled title="Send File">FILE</button>
                 <button id="sendBtn" disabled>SEND</button>
                 <button class="secondary" id="changeNameBtn" title="Change Username">@</button>
+                <button class="secondary" id="tosBtn" title="View Terms">ToS</button>
+                <button class="secondary" onclick="window.open('https://github.com/NotlockOG/TerminalP2P', '_blank')" title="View on GitHub">GitHub</button>
                 <button class="secondary" id="leaveBtn" disabled style="display:none;">LEAVE</button>
+                <button style="background: #ff0000; color: #fff;" id="killBtn" title="Emergency Close">KILL</button>
             </div>
         </div>
     </div>
@@ -275,6 +461,8 @@
         const sendBtn = document.getElementById('sendBtn');
         const imageBtn = document.getElementById('imageBtn');
         const imageInput = document.getElementById('imageInput');
+        const fileBtn = document.getElementById('fileBtn');
+        const fileInput = document.getElementById('fileInput');
         const setupPanel = document.getElementById('setupPanel');
         const statusDot = document.getElementById('statusDot');
         const statusText = document.getElementById('statusText');
@@ -284,6 +472,12 @@
         if (!username) {
             username = prompt('Choose a username:') || 'user_' + Math.random().toString(36).substr(2, 6);
             localStorage.setItem('p2p_chat_username', username);
+        }
+        
+        // Check ToS acceptance
+        const tosAccepted = localStorage.getItem('p2p_tos_accepted');
+        if (!tosAccepted) {
+            document.getElementById('tosModal').classList.add('show');
         }
 
         const config = {
@@ -355,6 +549,27 @@
             output.appendChild(img);
             output.scrollTop = output.scrollHeight;
         }
+        
+        function logFile(fileName, fileData, sender, type = 'received') {
+            const line = document.createElement('div');
+            line.className = `line ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            const displayName = sender === 'you' ? username : sender;
+            line.textContent = `[${timestamp}] <${displayName}>: [FILE: ${fileName}]`;
+            output.appendChild(line);
+            
+            const downloadBtn = document.createElement('button');
+            downloadBtn.textContent = 'DOWNLOAD';
+            downloadBtn.style.marginTop = '5px';
+            downloadBtn.onclick = () => {
+                const a = document.createElement('a');
+                a.href = fileData;
+                a.download = fileName;
+                a.click();
+            };
+            output.appendChild(downloadBtn);
+            output.scrollTop = output.scrollHeight;
+        }
 
         function updateStatus() {
             if (serverMode && ws && ws.readyState === WebSocket.OPEN) {
@@ -424,6 +639,7 @@
                 messageInput.disabled = false;
                 sendBtn.disabled = false;
                 imageBtn.disabled = false;
+                fileBtn.disabled = false;
                 messageInput.placeholder = 'Type message...';
                 messageInput.focus();
             };
@@ -447,6 +663,10 @@
                         const peer = peers.get(peerId);
                         const displayName = peer?.username || peerId;
                         logImage(data.content, displayName, 'received');
+                    } else if (data.type === 'file') {
+                        const peer = peers.get(peerId);
+                        const displayName = peer?.username || peerId;
+                        logFile(data.fileName, data.content, displayName, 'received');
                     }
                 } catch (err) {
                     log('$ ERROR: Failed to process message', 'error');
@@ -463,6 +683,7 @@
                     messageInput.disabled = true;
                     sendBtn.disabled = true;
                     imageBtn.disabled = true;
+                    fileBtn.disabled = true;
                 }
             };
         }
@@ -869,6 +1090,51 @@
             document.getElementById('serverMode').style.display = 'block';
             document.getElementById('offlineTabBtn').className = 'secondary';
             document.getElementById('serverTabBtn').className = '';
+        });
+        
+        // ToS Modal
+        document.getElementById('acceptTosBtn').addEventListener('click', () => {
+            localStorage.setItem('p2p_tos_accepted', 'true');
+            document.getElementById('tosModal').classList.remove('show');
+        });
+        
+        document.getElementById('declineTosBtn').addEventListener('click', () => {
+            alert('You must accept the Terms of Service to use this application.');
+        });
+        
+        document.getElementById('tosBtn').addEventListener('click', () => {
+            document.getElementById('tosModal').classList.add('show');
+        });
+        
+        // Download HTML file
+        document.getElementById('downloadHtmlLink').addEventListener('click', () => {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'p2p-chat-v1.3.html';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+        
+        // Kill button - emergency close
+        document.getElementById('killBtn').addEventListener('click', () => {
+            // Close all peer connections
+            peers.forEach((peerData) => {
+                if (peerData.channel) peerData.channel.close();
+                if (peerData.pc) peerData.pc.close();
+            });
+            peers.clear();
+            
+            // Close WebSocket if connected
+            if (ws) ws.close();
+            
+            // Clear all storage
+            sessionStorage.clear();
+            
+            // Redirect to blank page (closes the chat)
+            window.location.href = 'about:blank';
         });
     </script>
 </body>
